@@ -1,0 +1,295 @@
+DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#50c878">
+  <title>Happy Birthday! 🐶🎂</title>
+  <style>
+    * { box-sizing: border-box; }
+    html { min-height: 100%; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px 12px;
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      color: #173d2b;
+      text-align: center;
+      background: linear-gradient(135deg, #ffd9e8, #ffeef5, #f9d3e3);
+      overflow-x: hidden;
+    }
+    #confetti {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .container { position: relative; z-index: 1; width: 100%; max-width: 650px; margin: 0 auto; }
+    .card {
+      padding: clamp(20px, 5vw, 34px);
+      border: 2px solid rgba(255,255,255,.9);
+      border-radius: 26px;
+      background: rgba(255,255,255,.86);
+      box-shadow: 0 12px 35px rgba(30,90,55,.15);
+    }
+    .tag { display: inline-block; margin-bottom: 17px; padding: 8px 14px; border-radius: 30px; background: #d9fbe3; color: #287345; font-size: 13px; font-weight: bold; }
+    h1 { margin: 0 0 12px; color: #17683d; font-size: clamp(2.2rem, 8vw, 4rem); line-height: 1.12; overflow-wrap: anywhere; }
+    .subtitle { margin: 0; color: #496c55; font-size: clamp(15px, 4vw, 18px); line-height: 1.65; }
+    .puppy-area { margin: 20px 0; }
+    .puppy { display: inline-block; font-size: clamp(90px, 23vw, 145px); line-height: 1.2; filter: drop-shadow(0 8px 5px rgba(60,100,60,.12)); animation: bounce 2s ease-in-out infinite; }
+    .gift { margin-top: -4px; font-size: clamp(52px, 14vw, 82px); animation: wiggle 2s ease-in-out infinite; }
+    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes wiggle { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+    .message { margin: 20px 0; padding: 20px 17px; border-radius: 18px; background: #fff9e9; color: #5c684b; font-size: 16px; line-height: 1.8; }
+    .message h2 { margin: 0 0 10px; color: #287345; font-size: 22px; }
+    .message p { margin: 10px 0 0; }
+    button { min-height: 46px; padding: 12px 20px; border: 0; border-radius: 30px; font: inherit; font-weight: bold; cursor: pointer; touch-action: manipulation; transition: transform .2s, box-shadow .2s; }
+    button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 14px rgba(0,0,0,.12); }
+    button:active:not(:disabled) { transform: scale(.98); }
+    button:disabled { cursor: not-allowed; opacity: .55; }
+    .celebrate-btn { width: 100%; max-width: 300px; color: #fff; background: #ff6392; }
+    .photo-area, .voice-area { margin-top: 26px; }
+    .section-title { display: block; margin-bottom: 11px; color: #287345; font-weight: bold; }
+    input[type="file"] { display: block; width: 100%; max-width: 340px; margin: 0 auto; padding: 10px; border: 1px solid #b8dfc4; border-radius: 12px; background: #fff; color: #496c55; }
+    #photo { display: none; max-width: 100%; max-height: 320px; margin: 16px auto 0; object-fit: contain; border: 5px solid #fff; border-radius: 18px; box-shadow: 0 5px 15px #00000018; }
+    .voice-area { padding: 19px 14px; border-radius: 20px; background: #fff0f5; }
+    .voice-area h2 { margin: 0 0 10px; color: #d94378; font-size: 19px; }
+    .voice-area p { color: #765968; font-size: 14px; line-height: 1.5; }
+    .voice-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .record-btn { color: #fff; background: #ff6392; }
+    .stop-btn { color: #287345; background: #dcefe2; }
+    #voiceStatus { margin: 12px 0 0; overflow-wrap: anywhere; }
+    #audioPlayback { display: none; width: 100%; margin-top: 14px; }
+    footer { margin-top: 24px; color: #52755c; font-size: 14px; line-height: 1.9; }
+    .heart { display: inline-block; color: #ff6392; animation: heartbeat 1.2s infinite; }
+    @keyframes heartbeat { 50% { transform: scale(1.2); } }
+    @media (max-width: 480px) {
+      body { padding: 12px 8px; }
+      .card { border-radius: 21px; }
+      .message { font-size: 15px; padding: 17px 13px; }
+      .message h2 { font-size: 20px; }
+      .voice-buttons button { flex: 1 1 110px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <main class="container">
+    <section class="card">
+      <div class="tag">✨ A SPECIAL DAY JUST FOR YOU ✨</div>
+      <h1>Happy Birthday! 🎉</h1>
+      <p class="subtitle">Today is all about celebrating YOU!</p>
+
+      <div class="puppy-area">
+        <div class="puppy" role="img" aria-label="Cute puppy">🐶</div>
+        <div class="gift" role="img" aria-label="Birthday present">🎁</div>
+        <p style="color:#287345;font-weight:bold">Woof! Woof! Happy Birthday! 🐾</p>
+      </div>
+
+      <div class="message">
+        <h2>💚 Birthday Wishes 💚</h2>
+        <p>May your special day be filled with happiness, love, laughter, and beautiful memories.</p>
+        <p>May all your dreams come true, and may this new chapter of your life bring you countless reasons to smile.</p>
+        <p>Keep shining, keep smiling, and always remember how special you are!</p>
+        <p>And, sana diri ka maka karawat hen 3 bellow na grade.</p>
+      </div>
+
+      <button class="celebrate-btn" id="celebrate" type="button">🎉 Celebrate Again! 🎉</button>
+
+      <div class="photo-area">
+        <label class="section-title" for="photoInput">💗 Add Your Favorite Photo</label>
+        <input type="file" id="photoInput" accept="image/*">
+        <img id="photo" alt="Your selected birthday photo">
+      </div>
+
+      <div class="voice-area">
+        <h2>🎤 Leave a Voice Message</h2>
+        <p>Record a special birthday greeting!</p>
+        <div class="voice-buttons">
+          <button class="record-btn" id="recordBtn" type="button">🔴 Record</button>
+          <button class="stop-btn" id="stopBtn" type="button" disabled>⏹ Stop</button>
+        </div>
+        <p id="voiceStatus" role="status" aria-live="polite">Ready to record.</p>
+        <audio id="audioPlayback" controls></audio>
+      </div>
+
+      <footer>
+        Made with <span class="heart">♥</span> and lots of love.<br>
+        Have the most wonderful birthday ever!<br>
+        <span style="font-size:22px">🎂 💚</span><br>
+        <span style="display:inline-block;margin-top:8px;font-weight:bold;letter-spacing:2px;color:#2013d7;">From FACTOR</span>
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    "use strict";
+
+    // CONFETTI
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    const colors = ["#ff6392", "#ffd447", "#42a5f5", "#8e63ff", "#50C878", "#ff914d"];
+    let pieces = [];
+    let running = false;
+    let dpr = 1;
+
+    function resizeCanvas() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.floor(window.innerWidth * dpr);
+      canvas.height = Math.floor(window.innerHeight * dpr);
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function createConfetti(amount = 180) {
+      for (let i = 0; i < amount; i++) {
+        pieces.push({
+          x: Math.random() * window.innerWidth,
+          y: -Math.random() * Math.max(window.innerHeight, 300),
+          size: Math.random() * 7 + 4,
+          speed: Math.random() * 3 + 2,
+          drift: Math.random() * 2 - 1,
+          rotation: Math.random() * 360,
+          spin: Math.random() * 8 - 4,
+          color: colors[Math.floor(Math.random() * colors.length)]
+        });
+      }
+      if (pieces.length > 450) pieces = pieces.slice(-450);
+      if (!running) {
+        running = true;
+        requestAnimationFrame(animateConfetti);
+      }
+    }
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      for (const piece of pieces) {
+        piece.y += piece.speed;
+        piece.x += piece.drift;
+        piece.rotation += piece.spin;
+        ctx.save();
+        ctx.translate(piece.x, piece.y);
+        ctx.rotate(piece.rotation * Math.PI / 180);
+        ctx.fillStyle = piece.color;
+        ctx.fillRect(-piece.size / 2, -piece.size / 2, piece.size, piece.size * 0.65);
+        ctx.restore();
+      }
+      pieces = pieces.filter(piece => piece.y < window.innerHeight + 20);
+      if (pieces.length) {
+        requestAnimationFrame(animateConfetti);
+      } else {
+        running = false;
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      }
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+    document.getElementById("celebrate").addEventListener("click", () => createConfetti(220));
+    // Start confetti when the page loads.
+    createConfetti(180);
+
+    // PHOTO PREVIEW
+    const photoInput = document.getElementById("photoInput");
+    const photo = document.getElementById("photo");
+    let currentPhotoURL = null;
+
+    photoInput.addEventListener("change", () => {
+      const file = photoInput.files && photoInput.files[0];
+      if (!file) return;
+      if (!file.type.startsWith("image/")) {
+        alert("Please choose a valid image file.");
+        photoInput.value = "";
+        return;
+      }
+      if (currentPhotoURL) URL.revokeObjectURL(currentPhotoURL);
+      currentPhotoURL = URL.createObjectURL(file);
+      photo.src = currentPhotoURL;
+      photo.style.display = "block";
+    });
+
+    // VOICE RECORDER: requires browser microphone support and permission.
+    const recordBtn = document.getElementById("recordBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const voiceStatus = document.getElementById("voiceStatus");
+    const audioPlayback = document.getElementById("audioPlayback");
+    let mediaRecorder = null;
+    let audioStream = null;
+    let audioChunks = [];
+    let audioURL = null;
+
+    recordBtn.addEventListener("click", async () => {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
+        voiceStatus.textContent = "Recording is not available here. Open this page with VS Code Live Server in Chrome or Edge.";
+        return;
+      }
+
+      recordBtn.disabled = true;
+      voiceStatus.textContent = "Requesting microphone permission...";
+
+      try {
+        audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioChunks = [];
+
+        let options = {};
+        if (MediaRecorder.isTypeSupported("audio/webm;codecs=opus")) {
+          options.mimeType = "audio/webm;codecs=opus";
+        }
+        mediaRecorder = new MediaRecorder(audioStream, options);
+
+        mediaRecorder.addEventListener("dataavailable", event => {
+          if (event.data && event.data.size > 0) audioChunks.push(event.data);
+        });
+
+        mediaRecorder.addEventListener("stop", () => {
+          const blobType = mediaRecorder.mimeType || "audio/webm";
+          const audioBlob = new Blob(audioChunks, { type: blobType });
+          if (audioURL) URL.revokeObjectURL(audioURL);
+          audioURL = URL.createObjectURL(audioBlob);
+          audioPlayback.src = audioURL;
+          audioPlayback.style.display = "block";
+          voiceStatus.textContent = "Recording ready! Press play to listen.";
+          if (audioStream) {
+            audioStream.getTracks().forEach(track => track.stop());
+            audioStream = null;
+          }
+          recordBtn.disabled = false;
+          stopBtn.disabled = true;
+        });
+
+        mediaRecorder.addEventListener("error", () => {
+          voiceStatus.textContent = "A recording error occurred. Please try again.";
+          recordBtn.disabled = false;
+          stopBtn.disabled = true;
+          if (audioStream) audioStream.getTracks().forEach(track => track.stop());
+          audioStream = null;
+        });
+
+        mediaRecorder.start();
+        stopBtn.disabled = false;
+        voiceStatus.textContent = "Recording... Speak your birthday message now.";
+      } catch (error) {
+        if (audioStream) audioStream.getTracks().forEach(track => track.stop());
+        audioStream = null;
+        recordBtn.disabled = false;
+        stopBtn.disabled = true;
+        voiceStatus.textContent = "Could not access the microphone. Allow microphone permission and try again using Live Server.";
+      }
+    });
+
+    stopBtn.addEventListener("click", () => {
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        stopBtn.disabled = true;
+        mediaRecorder.stop();
+      }
+    });
+  </script>
+</body>
+</html>
